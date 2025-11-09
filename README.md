@@ -96,32 +96,6 @@ ANN Model Prediction (TensorFlow)
 Churn Probability & Classification Output
 ```
 
-## How to Run Locally
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/<your-username>/Customer_Churn.git
-cd Customer_Churn
-```
-
-### 2. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Run the Streamlit Application
-```bash
-streamlit run app.py
-```
-
-### 4. Access the App
-Open the URL displayed in your terminal, typically:
-```
-http://localhost:8501
-```
-
----
-
 ## Model Inputs and Outputs
 
 ### Input Features
