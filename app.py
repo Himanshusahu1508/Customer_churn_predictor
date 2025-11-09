@@ -1,9 +1,9 @@
 import streamlit as st
 import numpy as np
 import joblib
-from tensorflow.keras.models import load_model
+import keras
 
-model = load_model("model.h5")
+model = keras.layers.TFSMLayer("model_export", call_endpoint="serving_default")
 scaler = joblib.load("scaler.pkl")
 
 st.set_page_config(page_title="Customer Churn Predictor", layout="centered")
@@ -12,6 +12,7 @@ st.title("Customer Churn Prediction")
 st.markdown("""
 Enter customer details and get a predicted churn probability 
 """)
+
 with st.form("input_form"):
     geography = st.selectbox("Geography", ["France", "Spain", "Germany"])
     gender = st.selectbox("Gender", ["Male","Female"])
@@ -33,16 +34,15 @@ if submitted:
     else:
         geo = [0, 0, 1]
 
-
     gen = 1 if gender == "Male" else 0
-
     has_cc = 1 if has_credit_card == "Yes" else 0
     active = 1 if is_active_member == "Yes" else 0
 
     features = geo + [credit_score, gen, age, tenure, balance, num_products, has_cc, active, estimated_salary]
     scaled_features = scaler.transform([features])
 
-    prob = float(model.predict(scaled_features)[0][0])
+    # Predict
+    prob = float(model([scaled_features])[0][0].numpy())
     prediction = "Churn" if prob > 0.5 else "Stay"
 
     st.subheader("Prediction Result")
@@ -51,6 +51,3 @@ if submitted:
         st.error(f"Customer likely to **CHURN**")
     else:
         st.success(f"Customer likely to **STAY**")
-
-
-
