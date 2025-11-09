@@ -3,6 +3,23 @@ import numpy as np
 import joblib
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+import sys, importlib
+
+# Ensure no standalone keras conflicts
+if "keras" in sys.modules:
+    del sys.modules["keras"]
+import tensorflow as tf
+from tensorflow import keras
+
+# Optional: warn user if standalone keras is found
+try:
+    import keras as standalone
+    if not standalone.__file__.startswith(tf.__path__[0]):
+        import streamlit as st
+        st.warning("⚠️ Standalone 'keras' detected — please uninstall it. Using tf.keras instead.")
+except Exception:
+    pass
+
 
 sc = joblib.load('scaler.pkl')
 model = load_model('model_reexported.keras')
@@ -52,4 +69,5 @@ if submitted:
         st.error("Customer likely to CHURN")
     else:
         st.success("Customer likely to STAY")
+
 
