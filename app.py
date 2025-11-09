@@ -51,9 +51,10 @@ if submitted:
 
     # ✅ Display result
     st.subheader("Prediction Result")
-    st.metric("Churn Probability", f"{prob:.3f}")
+    st.metric("Churn Probability", f"{prob:.3f*100}")
     if prob > 0.5:
         st.error("Customer likely to CHURN")
     else:
         st.success("Customer likely to STAY")
+
 
