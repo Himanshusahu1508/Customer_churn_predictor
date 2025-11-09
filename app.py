@@ -3,8 +3,8 @@ import numpy as np
 import joblib
 import keras
 
-model = keras.layers.TFSMLayer("model_export", call_endpoint="serving_default")
-scaler = joblib.load("scaler.pkl")
+sc = joblib.load('scaler.pkl')
+model = tf.keras.models.load_model('model.h5')
 
 st.set_page_config(page_title="Customer Churn Predictor", layout="centered")
 st.title("Customer Churn Prediction")
@@ -51,3 +51,4 @@ if submitted:
         st.error(f"Customer likely to **CHURN**")
     else:
         st.success(f"Customer likely to **STAY**")
+
