@@ -1,6 +1,11 @@
 streamlit==1.38.0
 tensorflow==2.15.0
+
+--constraint https://raw.githubusercontent.com/tensorflow/tensorflow/v2.15.0/requirements.txt
+
+
 scikit-learn==1.6.1
+
 pandas==2.2.2
 numpy==1.26.4
 joblib==1.4.2
