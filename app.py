@@ -5,11 +5,7 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 
 sc = joblib.load('scaler.pkl')
-
-try:
-    model = load_model('model.h5')
-except TypeError:
-    model = load_model('model.h5', compile=False)
+model = load_model('model_reexported.keras')
 
 st.set_page_config(page_title="Customer Churn Predictor", layout="centered")
 st.title("Customer Churn Prediction")
@@ -56,3 +52,4 @@ if submitted:
         st.error("Customer likely to CHURN")
     else:
         st.success("Customer likely to STAY")
+
