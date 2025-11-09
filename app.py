@@ -1,11 +1,15 @@
 import streamlit as st
 import numpy as np
 import joblib
-import keras
 import tensorflow as tf
+from tensorflow.keras.models import load_model
 
 sc = joblib.load('scaler.pkl')
-model = tf.keras.models.load_model('model.h5')
+
+try:
+    model = load_model('model.h5')
+except TypeError:
+    model = load_model('model.h5', compile=False)
 
 st.set_page_config(page_title="Customer Churn Predictor", layout="centered")
 st.title("Customer Churn Prediction")
@@ -40,17 +44,15 @@ if submitted:
     active = 1 if is_active_member == "Yes" else 0
 
     features = geo + [credit_score, gen, age, tenure, balance, num_products, has_cc, active, estimated_salary]
-    scaled_features = scaler.transform([features])
+    features = np.array(features).reshape(1, -1)
+    scaled_features = sc.transform(features)
 
-    # Predict
-    prob = float(model([scaled_features])[0][0].numpy())
+    prob = float(model.predict(scaled_features)[0][0])
     prediction = "Churn" if prob > 0.5 else "Stay"
 
     st.subheader("Prediction Result")
     st.metric("Churn Probability", f"{prob:.3f}")
     if prob > 0.5:
-        st.error(f"Customer likely to **CHURN**")
+        st.error("Customer likely to CHURN")
     else:
-        st.success(f"Customer likely to **STAY**")
-
-
+        st.success("Customer likely to STAY")
