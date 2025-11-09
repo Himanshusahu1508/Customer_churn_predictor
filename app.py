@@ -1,0 +1,55 @@
+import streamlit as st
+import numpy as np
+import joblib
+from tensorflow.keras.models import load_model
+
+model = load_model("model.keras")
+scaler = joblib.load("scaler.pkl")
+
+st.set_page_config(page_title="Customer Churn Predictor", layout="centered")
+st.title("Customer Churn Prediction")
+
+st.markdown("""
+Enter customer details and get a predicted churn probability 
+""")
+with st.form("input_form"):
+    geography = st.selectbox("Geography", ["France", "Spain", "Germany"])
+    gender = st.selectbox("Gender", ["Male","Female"])
+    credit_score = st.slider("Credit Score", 350, 850, 600)
+    age = st.slider("Age", 18, 100, 40)
+    tenure = st.slider("Tenure (years)", 0, 10, 3)
+    balance = st.number_input("Balance", min_value=0.0, max_value=1_000_000.0, value=60000.0, format="%.2f")
+    num_products = st.selectbox("Number of Products", [1, 2, 3, 4])
+    has_credit_card = st.selectbox("Has Credit Card", ["Yes", "No"])
+    is_active_member = st.selectbox("Is Active Member", ["Yes", "No"])
+    estimated_salary = st.number_input("Estimated Salary", min_value=0.0, max_value=1_000_000.0, value=50000.0, format="%.2f")
+    submitted = st.form_submit_button("Predict")
+
+if submitted:
+    if geography == "France":
+        geo = [1, 0, 0]
+    elif geography == "Germany":
+        geo = [0, 1, 0]
+    else:
+        geo = [0, 0, 1]
+
+
+    gen = 1 if gender == "Male" else 0
+
+    has_cc = 1 if has_credit_card == "Yes" else 0
+    active = 1 if is_active_member == "Yes" else 0
+
+    features = geo + [credit_score, gen, age, tenure, balance, num_products, has_cc, active, estimated_salary]
+    scaled_features = scaler.transform([features])
+
+    prob = float(model.predict(scaled_features)[0][0])
+    prediction = "Churn" if prob > 0.5 else "Stay"
+
+    st.subheader("Prediction Result")
+    st.metric("Churn Probability", f"{prob:.3f}")
+    if prob > 0.5:
+        st.error(f"Customer likely to **CHURN**")
+    else:
+        st.success(f"Customer likely to **STAY**")
+
+
