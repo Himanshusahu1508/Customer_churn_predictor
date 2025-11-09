@@ -22,7 +22,7 @@ except Exception:
 
 
 sc = joblib.load('scaler.pkl')
-model = load_model('model_reexported.keras')
+model = load_model('model')
 
 st.set_page_config(page_title="Customer Churn Predictor", layout="centered")
 st.title("Customer Churn Prediction")
@@ -69,5 +69,6 @@ if submitted:
         st.error("Customer likely to CHURN")
     else:
         st.success("Customer likely to STAY")
+
 
 
