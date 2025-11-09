@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import joblib
 import keras
+import tensorflow as tf
 
 sc = joblib.load('scaler.pkl')
 model = tf.keras.models.load_model('model.h5')
@@ -51,4 +52,5 @@ if submitted:
         st.error(f"Customer likely to **CHURN**")
     else:
         st.success(f"Customer likely to **STAY**")
+
 
