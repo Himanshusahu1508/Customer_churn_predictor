@@ -3,7 +3,7 @@ import numpy as np
 import joblib
 from tensorflow.keras.models import load_model
 
-model = load_model("model.keras")
+model = load_model("model.h5")
 scaler = joblib.load("scaler.pkl")
 
 st.set_page_config(page_title="Customer Churn Predictor", layout="centered")
@@ -51,5 +51,6 @@ if submitted:
         st.error(f"Customer likely to **CHURN**")
     else:
         st.success(f"Customer likely to **STAY**")
+
 
 
